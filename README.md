@@ -42,6 +42,14 @@ kubectl get pods -n say-app -o wide
 ```
 
 
+Now lets make sure that all the pods run, even doubling up where necessary.
+
+
+```
+kubectl apply -f say-at-least-one.yaml -n say-app
+kubectl get pods -n say-app -o wide
+```
+
 
 Teardown
 
