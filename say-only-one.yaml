@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: say-deployment
+spec:
+  selector:
+    matchLabels:
+      app: 'say'
+  replicas: 6
+  template:
+    metadata:
+      labels:
+        app: say
+    spec:
+      containers:
+      - name: say
+        image: nginxdemos/hello:latest
+        ports:
+        - containerPort: 8080
+      affinity:
+              podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchExpressions:
+                        - key: "app"
+                          operator: In
+                          values:
+                          - say
+                    topologyKey: "kubernetes.io/hostname"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: say-service
+spec:
+  selector:
+    app: say
+  ports:
+    - protocol: TCP
+      port: 8080
+  type: NodePort
+  selector:
+    app: 'say'
